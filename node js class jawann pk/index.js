@@ -40,17 +40,31 @@
 
 //// class 2
 
+
 const express = require("express")
+const cors = require("cors")
+const bd = require("body-parser")
+
 const app = express()
 const port = 5000
 
+
+app.use(cors())
+app.use(bd.urlencoded({
+    extended: false
+}))
+app.use(bd.json())
+
+
+let array = []
+
 app.get('/', (req, res) => {
     const arr = [{ name: 'areeb', age: '23' }, { name: 'Ali', age: '23' }, { name: 'hussain', age: '23' }, { name: 'Umar', age: '23' }]
-    res.send(arr)
+    res.send(array)
 })
 app.post('/singup', (req, res) => {
-    // console.log(req, 'singup')
-    res.send('Hello singup')
+    // console.log(req.body)
+    array.push(req.body)
 })
 app.listen(port, () => {
     console.log('Server is running')
