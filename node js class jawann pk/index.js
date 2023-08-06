@@ -56,15 +56,15 @@ app.use(bd.urlencoded({
 app.use(bd.json())
 
 
-let array = []
+// let array = []
 
 app.get('/', (req, res) => {
-    const arr = [{ name: 'areeb', age: '23' }, { name: 'Ali', age: '23' }, { name: 'hussain', age: '23' }, { name: 'Umar', age: '23' }]
-    res.send(array)
+    const arr = [{ name: 'areeb', age: '23' }]
+    res.send(arr)
 })
 app.post('/singup', (req, res) => {
-    // console.log(req.body)
-    array.push(req.body)
+    console.log(req.body)
+    // array.push(req.body)
 })
 app.listen(port, () => {
     console.log('Server is running')
