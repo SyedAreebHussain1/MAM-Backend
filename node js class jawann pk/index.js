@@ -143,6 +143,7 @@ const express = require("express")
 const cors = require("cors")
 const bd = require("body-parser")
 const mongoose = require("mongoose")
+const bcrypt = require("bcryptjs")
 const app = express()
 const port = 5000
 const authModel = require('./authschema')
@@ -171,35 +172,34 @@ app.get('/', (req, res) => {
     const arr = [{ name: 'areeb', age: '23' }]
     res.send(arr)
 })
-app.post('/signin', async (req, res) => {
+app.post('/signup', async (req, res) => {
     // console.log(req.body)
     var checkUser = await authModel.findOne({
         email: req.body.email,
-        // password: req.body.password
     })
-    // res.send({ result: checkUser })
-
     if (checkUser) {
         res.status(200).send({ result: checkUser, message: "Email Already Resgistered" })
     } else {
-        res.send({ message: "Yes you can Signin" })
+        var hashPass = await bcrypt.hash(req.body.password, 12)
+        if (req.body.email !== "" && req.body.password !== "" && req.body.password.length > 7 ) {
+            console.log('run')
+            let userCreate = new authModel({
+                email: req.body.email,
+                password: hashPass
+            })
+            userCreate.save()
+                .then((response) => {
+                    res.status(200).send({ result: response, message: "User Signup successfully" })
+                })
+                .catch((err) => {
+                    res.status(400).send({ result: err.message, message: "Data not store" })
+                })
+        } else {
+            res.status(401).send({ message: "All field are Req" })
+        }
     }
 
 
-    // let userCreate = new authModel({
-    //     email: req.body.email,
-    //     password: req.body.password
-    // })
-    // userCreate.save()
-    //     .then((response) => {
-    //         // console.log('response=>', response)
-    //         res.status(200).send({ result: response, message: "Data store successfully" })
-    //     })
-    //     .catch((err) => {
-    //         // console.log('err=>', err)
-    //         res.status(400).send({ result: err.message ,message: "Data not store"})
-
-    //     })
 })
 app.listen(port, () => {
     console.log('Server is running')
