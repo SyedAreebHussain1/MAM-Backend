@@ -38,18 +38,114 @@
 
 
 
-//// class 2
+// //// class 2
+
+
+// const express = require("express")
+// const cors = require("cors")
+// const bd = require("body-parser")
+// const mongoose = require("mongoose")
+// // const { MongoClient, ServerApiVersion } = require('mongodb');
+// const app = express()
+// const port = 5000
+// const authModel = require('./authschema')
+
+
+// app.use(cors())
+// app.use(bd.urlencoded({
+//     extended: false
+// }))
+// app.use(bd.json())
+
+
+// const uri = "mongodb+srv://AreebHusain:mongodbaReeb128@cluster0.ymorhs7.mongodb.net/?retryWrites=true&w=majority";
+// mongoose.connect("mongodb+srv://AreebHusain:mongodbaReeb128@cluster0.ymorhs7.mongodb.net/?retryWrites=true&w=majority", {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+//     w: 'majority', // Write concern
+//     wtimeout: 30000 // Increased timeout in milliseconds (30 seconds)
+// })
+//     .then(() => {
+//         console.log('Connected to MongoDB');
+//     })
+//     .catch(err => {
+//         console.error('Error connecting to MongoDB:', err);
+//     });
+
+// // const client = new MongoClient(uri, {
+// //     serverApi: {
+// //         version: ServerApiVersion.v1,
+// //         strict: true,
+// //         deprecationErrors: true,
+// //     }
+// // });
+// // async function run() {
+// //     try {
+// //         await client.connect();
+// //         await client.db("admin").command({ ping: 1 });
+// //         console.log("Database Connected");
+// //     } finally {
+// //         // Ensures that the client will close when you finish/error
+// //         await client.close();
+// //         // console.log("Database Not Connected ");
+// //     }
+// // }
+// // run().catch(console.dir);
+
+// // mongoose.connect("mongodb+srv://AreebHusain:mongodbaReeb128@cluster0.ymorhs7.mongodb.net/?retryWrites=true&w=majority", {
+// //     useCreateIndex: true,
+// //     useNewUrlParser: true,
+// //     useUnifiedTopology: true
+// // })
+// // mongoose.connection.on("connected",() => {
+// //     console.log('Database Connected')
+// // })
+// // mongoose.connection.on("error",() => {
+// //     console.log('Database Not Connected')
+// // })
+
+// app.get('/', (req, res) => {
+//     const arr = [{ name: 'areeb', age: '23' }]
+//     res.send(arr)
+// })
+// app.post('/signin', (req, res) => {
+//     // console.log(req.body)
+//     // database may store kar raha ho data
+//     let userCreate = new authModel({
+//         email: req.body.email,
+//         password: req.body.password
+//     })
+//     userCreate.save()
+//         .then((response) => {
+//             // console.log('response=>', response)
+//             res.status(200).send({ result: response, message: "Data store successfully" })
+//         })
+//         .catch((err) => {
+//             // console.log('err=>', err)
+//             res.status(400).send({ result: err.message ,message: "Data not store"})
+
+//         })
+// })
+// app.listen(port, () => {
+//     console.log('Server is running')
+// })
+
+
+
+
+
+
+
+//// class 3
 
 
 const express = require("express")
 const cors = require("cors")
 const bd = require("body-parser")
 const mongoose = require("mongoose")
-// const { MongoClient, ServerApiVersion } = require('mongodb');
 const app = express()
 const port = 5000
 const authModel = require('./authschema')
-
 
 app.use(cors())
 app.use(bd.urlencoded({
@@ -57,13 +153,11 @@ app.use(bd.urlencoded({
 }))
 app.use(bd.json())
 
-
-const uri = "mongodb+srv://AreebHusain:mongodbaReeb128@cluster0.ymorhs7.mongodb.net/?retryWrites=true&w=majority";
 mongoose.connect("mongodb+srv://AreebHusain:mongodbaReeb128@cluster0.ymorhs7.mongodb.net/?retryWrites=true&w=majority", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    w: 'majority', // Write concern
-    wtimeout: 30000 // Increased timeout in milliseconds (30 seconds)
+    w: 'majority',
+    wtimeout: 30000
 })
     .then(() => {
         console.log('Connected to MongoDB');
@@ -72,59 +166,40 @@ mongoose.connect("mongodb+srv://AreebHusain:mongodbaReeb128@cluster0.ymorhs7.mon
         console.error('Error connecting to MongoDB:', err);
     });
 
-// const client = new MongoClient(uri, {
-//     serverApi: {
-//         version: ServerApiVersion.v1,
-//         strict: true,
-//         deprecationErrors: true,
-//     }
-// });
-// async function run() {
-//     try {
-//         await client.connect();
-//         await client.db("admin").command({ ping: 1 });
-//         console.log("Database Connected");
-//     } finally {
-//         // Ensures that the client will close when you finish/error
-//         await client.close();
-//         // console.log("Database Not Connected ");
-//     }
-// }
-// run().catch(console.dir);
-
-// mongoose.connect("mongodb+srv://AreebHusain:mongodbaReeb128@cluster0.ymorhs7.mongodb.net/?retryWrites=true&w=majority", {
-//     useCreateIndex: true,
-//     useNewUrlParser: true,
-//     useUnifiedTopology: true
-// })
-// mongoose.connection.on("connected",() => {
-//     console.log('Database Connected')
-// })
-// mongoose.connection.on("error",() => {
-//     console.log('Database Not Connected')
-// })
 
 app.get('/', (req, res) => {
     const arr = [{ name: 'areeb', age: '23' }]
     res.send(arr)
 })
-app.post('/signin', (req, res) => {
+app.post('/signin', async (req, res) => {
     // console.log(req.body)
-    // database may store kar raha ho data
-    let userCreate = new authModel({
+    var checkUser = await authModel.findOne({
         email: req.body.email,
-        password: req.body.password
+        // password: req.body.password
     })
-    userCreate.save()
-        .then((response) => {
-            // console.log('response=>', response)
-            res.status(200).send({ result: response, message: "Data store successly" })
-        })
-        .catch((err) => {
-            // console.log('err=>', err)
-            res.status(400).send({ result: err.message ,message: "Data not store"})
+    // res.send({ result: checkUser })
 
-        })
+    if (checkUser) {
+        res.status(200).send({ result: checkUser, message: "Email Already Resgistered" })
+    } else {
+        res.send({ message: "Yes you can Signin" })
+    }
+
+
+    // let userCreate = new authModel({
+    //     email: req.body.email,
+    //     password: req.body.password
+    // })
+    // userCreate.save()
+    //     .then((response) => {
+    //         // console.log('response=>', response)
+    //         res.status(200).send({ result: response, message: "Data store successfully" })
+    //     })
+    //     .catch((err) => {
+    //         // console.log('err=>', err)
+    //         res.status(400).send({ result: err.message ,message: "Data not store"})
+
+    //     })
 })
 app.listen(port, () => {
     console.log('Server is running')
