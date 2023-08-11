@@ -136,8 +136,7 @@
 
 
 
-//// class 3
-
+//// Class 3
 
 const express = require("express")
 const cors = require("cors")
@@ -147,6 +146,8 @@ const bcrypt = require("bcryptjs")
 const app = express()
 const port = 5000
 const authModel = require('./authschema')
+const todoModel = require('./todoschema')
+const getTodoModel = require('./gettodoschema')
 
 app.use(cors())
 app.use(bd.urlencoded({
@@ -169,11 +170,9 @@ mongoose.connect("mongodb+srv://AreebHusain:mongodbaReeb128@cluster0.ymorhs7.mon
 
 
 app.get('/', (req, res) => {
-    const arr = [{ name: 'areeb', age: '23' }]
-    res.send(arr)
+    res.send(req.body)
 })
 app.post('/signup', async (req, res) => {
-    // console.log(req.body)
     var checkUser = await authModel.findOne({
         email: req.body.email,
     })
@@ -181,8 +180,7 @@ app.post('/signup', async (req, res) => {
         res.status(200).send({ result: checkUser, message: "Email Already Resgistered" })
     } else {
         var hashPass = await bcrypt.hash(req.body.password, 12)
-        if (req.body.email !== "" && req.body.password !== "" && req.body.password.length > 7 ) {
-            console.log('run')
+        if (req.body.email !== "" && req.body.password !== "") {
             let userCreate = new authModel({
                 email: req.body.email,
                 password: hashPass
@@ -195,11 +193,48 @@ app.post('/signup', async (req, res) => {
                     res.status(400).send({ result: err.message, message: "Data not store" })
                 })
         } else {
-            res.status(401).send({ message: "All field are Req" })
+            res.status(401).send({ message: "All field are required" })
         }
     }
-
-
+})
+app.post('/signin', async (req, res) => {
+    var checkUser = await authModel.findOne({
+        email: req.body.email,
+        // password: passwordMatches
+    })
+    if (checkUser) {
+        const checkPass = await bcrypt.compare(req.body.password, checkUser.password);
+        if (checkPass) {
+            // console.log(checkPass)
+            res.status(200).send({ message: "singin Successfully" })
+        } else {
+            res.status(403).send({ message: "Your password is incorrect" })
+        }
+    } else {
+        res.status(403).send({ message: "No user is registern with this Email" })
+    }
+})
+app.post('/todoAdd', async (req, res) => {
+    if (req.body.todo !== "") {
+        let todoCreate = new todoModel({
+            todo: req.body.todo
+        })
+        todoCreate.save()
+            .then((response) => {
+                res.status(201).send({ result: response, message: "Your todo is successfully create" })
+            })
+            .catch((err) => {
+                res.status(400).send({ result: err.message, message: "Todo not create" })
+            })
+    } else {
+        res.status(401).send({ message: "Todo are required" })
+    }
+})
+app.get('/getTodoModel', async (req, res) => {
+    let getTodo = new todoModel({
+        todo: req.body.todo
+    })
+    res.send({ reques: req.body, msg: getTodo })
 })
 app.listen(port, () => {
     console.log('Server is running')
