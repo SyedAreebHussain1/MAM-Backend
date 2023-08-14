@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="signUp">
+        <h2>Sign Up</h2>
+        <input type="email" name="email" id="emailSignUp">
+        <input type="password" name="password" id="passwordSignUp">
+        <button onclick="submitSignUpBtn()">Sign Up</button>
+    </div>
+    <div id="signIn" style="display: none;">
+        <h2>Sign In</h2>
+        <input type="email" name="email" id="emailSignIn">
+        <input type="password" name="password" id="passwordSignIn">
+        <button onclick="submitSignInBtn()">Sign In</button>
+    </div>
+    <div id="todo" style="display: none;">
+        <h2>todoName</h2>
+        <input type="type" name="todoName" id="todoName">
+        <button onclick="addTodoBtn()">AddTodo</button>
+    </div>
+    <div id="main2" style="display: none;">
+        <ul id="list">
+        </ul>
+    </div>
+
+</body>
+<script src="app.js"></script>
+
+</html>
